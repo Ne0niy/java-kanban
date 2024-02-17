@@ -39,6 +39,11 @@ public class TaskManager {
         epicTasks.clear();
     }
 
+    public void deleteAllSupAndEpicTasks() { //Просто сделал общий метод
+        subTasks.clear();
+        epicTasks.clear();
+    }
+
     public Task getTaskById(int id) {
         return tasks.get(id);
     }
@@ -99,6 +104,7 @@ public class TaskManager {
         tasks.remove(id);
     }
 
+    //removeId ниже, а deleteAll был выше, я надеюсь првильно понял что мы удаляем информацию именно в TaskManager
     public void deleteSubTaskById(int id) {
         if (subTasks.containsKey(id)) {
             SubTask remove = subTasks.remove(id);
@@ -114,6 +120,14 @@ public class TaskManager {
             remove.getSubTasksIds().forEach(subTasks :: remove);
         }
     }
+
+    //
+    public void removeSubtask(int id) {  //NEW
+        if (subTasks.containsKey(id)) {
+            subTasks.remove(id, subTasks.get(id));
+        }
+    }
+    //
 
     public List<SubTask> getSubTasksByEpicId(int id) {
         if (epicTasks.containsKey(id)){
