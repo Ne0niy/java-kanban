@@ -10,7 +10,13 @@ import java.util.stream.Collectors;
 
 public class TaskManager {
 
+
     int idCounter = 1;
+
+    public int idCounter() {
+        return idCounter++;
+    }
+
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
     private final HashMap<Integer, EpicTask> epicTasks = new HashMap<>();
@@ -39,7 +45,8 @@ public class TaskManager {
         epicTasks.clear();
     }
 
-    public void deleteAllSupAndEpicTasks() { //Просто сделал общий метод
+    //NEW v2 // "Нужно еще удалить подзадачи из эпика" - я сохранил предидущий метод, но сделал новый, общий
+    public void deleteAllSubAndEpicTasks() {
         subTasks.clear();
         epicTasks.clear();
     }
@@ -57,7 +64,7 @@ public class TaskManager {
     }
 
     public Task addTask(Task task) {
-        task.setId(idCounter++);
+        task.setId(idCounter());
         tasks.put(task.getId() ,task);
         return task;
     }
@@ -66,7 +73,7 @@ public class TaskManager {
         int epicId = subTask.getEpicId();
         if (epicTasks.containsKey(epicId)) {
             EpicTask epicTask = epicTasks.get(epicId);
-            subTask.setId(idCounter++);
+            subTask.setId(idCounter());
             epicTask.addSubTaskId(subTask.getId());
             subTasks.put(subTask.getId(), subTask);
             updateEpicTaskStatus(epicId);
@@ -77,7 +84,7 @@ public class TaskManager {
     }
 
     public EpicTask addEpicTask(EpicTask epicTask) {
-        epicTask.setId(idCounter++);
+        epicTask.setId(idCounter());
         epicTasks.put(epicTask.getId(), epicTask);
         updateEpicTaskStatus(epicTask.getId());
         return epicTask;
@@ -104,30 +111,20 @@ public class TaskManager {
         tasks.remove(id);
     }
 
-    //removeId ниже, а deleteAll был выше, я надеюсь првильно понял что мы удаляем информацию именно в TaskManager
-    public void deleteSubTaskById(int id) {
+    //NEW v2 // Я удалил deleteSubTaskById(int id) и сделал removeSubtask(int id)
+    //Если я правельно понял, то так мы будем удалять Subtask из мапы что находится в TaskManager
+    //и не будет затрагивать список в EpicTask, а removeAllSubtasks я не делал, ведь уже есть deleteAllSubTasks()
+    public void removeSubtask(int id) {
         if (subTasks.containsKey(id)) {
-            SubTask remove = subTasks.remove(id);
-            EpicTask epicTask = epicTasks.get(remove.getEpicId());
-            epicTask.getSubTasksIds().remove(id);
-            updateEpicTaskStatus(epicTask.getId());
+            subTasks.remove(id, subTasks.get(id));
         }
     }
-
     public void deleteEpicTaskById(int id) {
         if (epicTasks.containsKey(id)){
             EpicTask remove = epicTasks.remove(id);
             remove.getSubTasksIds().forEach(subTasks :: remove);
         }
     }
-
-    //
-    public void removeSubtask(int id) {  //NEW
-        if (subTasks.containsKey(id)) {
-            subTasks.remove(id, subTasks.get(id));
-        }
-    }
-    //
 
     public List<SubTask> getSubTasksByEpicId(int id) {
         if (epicTasks.containsKey(id)){
@@ -138,7 +135,6 @@ public class TaskManager {
         }
         return new ArrayList<>();
     }
-
 
     private void updateEpicTaskStatus (int epicId) {
         EpicTask epicTask = epicTasks.get(epicId);

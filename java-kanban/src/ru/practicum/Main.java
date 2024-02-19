@@ -24,10 +24,10 @@ public class Main {
         taskManager.addSubTask(new SubTask("Взять чашку", "Выпить кофе", TaskStatus.NEW, 4));
 
         System.out.println("");
-        System.out.println(taskManager.getAllEpicTasks());
         System.out.println(taskManager.getAllTasks());
+        System.out.println(taskManager.getAllEpicTasks());
         System.out.println(taskManager.getAllSubTasks());
-        /*
+
         taskManager.getTaskById(1).setTaskStatus(TaskStatus.DONE);
         taskManager.getTaskById(2).setTaskStatus(TaskStatus.IN_PROGRESS);
 
@@ -39,24 +39,18 @@ public class Main {
         taskManager.updateEpicTask(taskManager.getEpicTaskById(4));
 
         System.out.println("");
-        System.out.println(taskManager.getAllEpicTasks());
         System.out.println(taskManager.getAllTasks());
+        System.out.println(taskManager.getAllEpicTasks());
         System.out.println(taskManager.getAllSubTasks());
 
         taskManager.deleteTaskById(1);
+        taskManager.removeSubtask(5);
+        taskManager.removeSubtask(6);
         taskManager.deleteEpicTaskById(3);
 
         System.out.println("");
-        System.out.println(taskManager.getAllEpicTasks());
         System.out.println(taskManager.getAllTasks());
-        System.out.println(taskManager.getAllSubTasks());
-        */
-
-        taskManager.removeSubtask(5);
-
-        System.out.println("");
         System.out.println(taskManager.getAllEpicTasks());
-        System.out.println(taskManager.getAllTasks());
         System.out.println(taskManager.getAllSubTasks());
     }
 }
