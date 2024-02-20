@@ -27,6 +27,18 @@ public class EpicTask extends Task {
         subTasksIds.add(subId);
     }
 
+    public void clearSubTasks() {
+        subTasksIds.clear();
+    }
+
+    public void removeSubtaskIdIfExist(Integer id) {
+        for (int i = 0; i < subTasksIds.size(); i++) {
+            if (subTasksIds.get(i).equals(id)) {
+                subTasksIds.remove(i);
+            }
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

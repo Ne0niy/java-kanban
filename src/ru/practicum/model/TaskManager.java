@@ -13,7 +13,7 @@ public class TaskManager {
 
     int idCounter = 1;
 
-    public int idCounter() {
+    private int idCounter() {
         return idCounter++;
     }
 
@@ -45,10 +45,13 @@ public class TaskManager {
         epicTasks.clear();
     }
 
-    //NEW v2 // "Нужно еще удалить подзадачи из эпика" - я сохранил предидущий метод, но сделал новый, общий
-    public void deleteAllSubAndEpicTasks() {
-        subTasks.clear();
-        epicTasks.clear();
+    public void removeAllSubTaskAndUpdateEpicStatus() {
+        for (EpicTask epic : epicTasks.values()) {
+            List<Integer> subTasksIds = epic.getSubTasksIds();
+            subTasksIds.forEach(subTasks::remove);
+            epic.clearSubTasks();
+            updateEpicTaskStatus(epic.getId());
+        }
     }
 
     public Task getTaskById(int id) {
@@ -111,18 +114,33 @@ public class TaskManager {
         tasks.remove(id);
     }
 
-    //NEW v2 // Я удалил deleteSubTaskById(int id) и сделал removeSubtask(int id)
-    //Если я правельно понял, то так мы будем удалять Subtask из мапы что находится в TaskManager
-    //и не будет затрагивать список в EpicTask, а removeAllSubtasks я не делал, ведь уже есть deleteAllSubTasks()
     public void removeSubtask(int id) {
         if (subTasks.containsKey(id)) {
             subTasks.remove(id, subTasks.get(id));
+            removeSubTaskInEpicTask(id);
         }
     }
+
+    public void removeSubTaskInEpicTask(int id) {
+        for (EpicTask epicTask : epicTasks.values()){
+            epicTask.removeSubtaskIdIfExist(id);
+        }
+    }
+
+    public void deleteSubTaskById(int id) {
+        if (subTasks.containsKey(id)) {
+            HashMap<Integer, SubTask> subTasks = new HashMap<>();
+            SubTask remove = subTasks.remove(id);
+            EpicTask epicTask = epicTasks.get(remove.getEpicId());
+            epicTask.getSubTasksIds().remove(id);
+            updateEpicTaskStatus(epicTask.getId());
+        }
+    }
+
     public void deleteEpicTaskById(int id) {
         if (epicTasks.containsKey(id)){
-            EpicTask remove = epicTasks.remove(id);
-            remove.getSubTasksIds().forEach(subTasks :: remove);
+            epicTasks.get(id).clearSubTasks();
+            epicTasks.remove(id);
         }
     }
 
