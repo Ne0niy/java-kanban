@@ -38,15 +38,32 @@ public class Main {
         taskManager.getSubTaskById(7).setTaskStatus(TaskStatus.IN_PROGRESS);
         taskManager.updateEpicTask(taskManager.getEpicTaskById(4));
 
+
+        System.out.println("");
+        System.out.println(taskManager.getAllTasks());
+        System.out.println(taskManager.getAllEpicTasks());
+        System.out.println(taskManager.getAllSubTasks());
+/*      //OLD
+        taskManager.deleteTaskById(1);
+        taskManager.removeSubtask(5);
+        taskManager.removeSubtask(6);
+        taskManager.deleteEpicTaskById(3);
+
+        System.out.println("");
+        System.out.println(taskManager.getAllTasks());
+        System.out.println(taskManager.getAllEpicTasks());
+        System.out.println(taskManager.getAllSubTasks());
+ */
+        //NEW
+        taskManager.deleteTaskById(1);
+        taskManager.removeEpicTaskByIdAndRemoveEpickSubTasks(3);
+
         System.out.println("");
         System.out.println(taskManager.getAllTasks());
         System.out.println(taskManager.getAllEpicTasks());
         System.out.println(taskManager.getAllSubTasks());
 
-        taskManager.deleteTaskById(1);
-        taskManager.removeSubtask(5);
-        taskManager.removeSubtask(6);
-        taskManager.deleteEpicTaskById(3);
+        taskManager.removeAllSubTaskAndUpdateEpicStatus();
 
         System.out.println("");
         System.out.println(taskManager.getAllTasks());
