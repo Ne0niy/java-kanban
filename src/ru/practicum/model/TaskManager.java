@@ -37,18 +37,9 @@ public class TaskManager {
         tasks.clear();
     }
 
-    //Этот метод я оставлю, он делает, то что нужно, удаляет все СабТаски
-    public void deleteAllSubTasks() {
-        subTasks.clear();
-    }
 
-    //В классе мейн я отдельно очищаю сначало сабтаски, а потом эпики, я могу сделать ещё один метод, но зачем?
-    public void deleteAllEpicTasks() {
-        epicTasks.clear();
-    }
-    
-    //NEW
-    public void deleteAllSubTasksAndEpicTasks(){
+    //NEW Оставил один метод
+    public void deleteAllSubTasks(){
         subTasks.clear();
         epicTasks.clear();
     }
@@ -147,7 +138,7 @@ public class TaskManager {
     }
 
     //NEW
-    public void removeEpicTaskByIdAndRemoveEpickSubTasks(int id) {
+    public void removeEpicTaskById(int id) {
         if (epicTasks.containsKey(id)) {
             List<Integer> subTasksIds = epicTasks.get(id).getSubTasksIds();
             for (int subId : subTasksIds){
