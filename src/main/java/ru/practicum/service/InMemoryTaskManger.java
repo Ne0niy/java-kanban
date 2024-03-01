@@ -5,7 +5,6 @@ import ru.practicum.model.SubTask;
 import ru.practicum.model.Task;
 import ru.practicum.model.enums.TaskStatus;
 import ru.practicum.model.enums.TaskType;
-import ru.practicum.util.Managers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,15 +17,21 @@ public class InMemoryTaskManger implements TaskManager {
 
     int idCounter = 1;
 
-    private int idCounter() {
-        return idCounter++;
-    }
 
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
     private final HashMap<Integer, EpicTask> epicTasks = new HashMap<>();
 
-    private final HistoryManager historyManager = Managers.getDefaultHistory();
+    private final HistoryManager historyManager;
+
+    public InMemoryTaskManger(HistoryManager historyManager) {
+        this.historyManager = historyManager;
+    }
+
+    private int idCounter() {
+        return idCounter++;
+    }
+
 
     @Override
     public List<Task> getAllTasksByType(TaskType taskType) {

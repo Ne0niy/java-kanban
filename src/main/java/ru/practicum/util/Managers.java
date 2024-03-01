@@ -7,8 +7,8 @@ import ru.practicum.service.TaskManager;
 
 public class Managers {
 
-    public static TaskManager getDefault() {
-        return new InMemoryTaskManger();
+    public static TaskManager getDefault(HistoryManager historyManager) {
+        return new InMemoryTaskManger(historyManager);
     }
 
     public static HistoryManager getDefaultHistory() {

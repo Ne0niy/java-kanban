@@ -13,9 +13,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskMangerTest {
 
+    private final HistoryManager historyManager = new InMemoryHistoryManager();
+
     @Test
     void whenGetAllTasks() {
-        TaskManager taskManager = new InMemoryTaskManger();
+        TaskManager taskManager = new InMemoryTaskManger(historyManager);
         Task task1 = new Task("name1", "description1", TaskStatus.NEW, TaskType.TASK);
         Task task2 = new Task("name2", "description2", TaskStatus.NEW, TaskType.TASK);
         List<Task> expected = List.of(taskManager.addTask(task1), taskManager.addTask(task2));
@@ -25,7 +27,7 @@ class InMemoryTaskMangerTest {
 
     @Test
     void whenGetAllEpic() {
-        TaskManager taskManager = new InMemoryTaskManger();
+        TaskManager taskManager = new InMemoryTaskManger(historyManager);
         EpicTask task1 = new EpicTask("name1", "description1", TaskStatus.NEW, TaskType.EPIC_TASK);
         EpicTask task2 = new EpicTask("name2", "description2", TaskStatus.NEW, TaskType.EPIC_TASK);
         List<Task> expected = List.of(taskManager.addTask(task1), taskManager.addTask(task2));
@@ -35,7 +37,7 @@ class InMemoryTaskMangerTest {
 
     @Test
     void whenDeleteAllTasks() {
-        TaskManager taskManager = new InMemoryTaskManger();
+        TaskManager taskManager = new InMemoryTaskManger(historyManager);
         Task task1 = new Task("name1", "description1", TaskStatus.NEW, TaskType.TASK);
         Task task2 = new Task("name2", "description2", TaskStatus.NEW, TaskType.TASK);
         taskManager.addTask(task1);
@@ -47,7 +49,7 @@ class InMemoryTaskMangerTest {
 
     @Test
     void whenDeleteAllEpic() {
-        TaskManager taskManager = new InMemoryTaskManger();
+        TaskManager taskManager = new InMemoryTaskManger(historyManager);
         EpicTask task1 = new EpicTask("name1", "description1", TaskStatus.NEW, TaskType.EPIC_TASK);
         EpicTask task2 = new EpicTask("name2", "description2", TaskStatus.NEW, TaskType.EPIC_TASK);
         taskManager.addTask(task1);
@@ -59,7 +61,7 @@ class InMemoryTaskMangerTest {
 
     @Test
     void whenDeleteAllSubTask() {
-        TaskManager taskManager = new InMemoryTaskManger();
+        TaskManager taskManager = new InMemoryTaskManger(historyManager);
         SubTask task1 = new SubTask("name1", "description1", TaskStatus.NEW, 1, TaskType.SUBTASK);
         SubTask task2 = new SubTask("name2", "description2", TaskStatus.NEW, 1, TaskType.SUBTASK);
         EpicTask epic = new EpicTask("name1", "description1", TaskStatus.NEW, TaskType.EPIC_TASK);
@@ -73,7 +75,7 @@ class InMemoryTaskMangerTest {
 
     @Test
     void whenGetTaskByIdAndType() {
-        TaskManager taskManager = new InMemoryTaskManger();
+        TaskManager taskManager = new InMemoryTaskManger(historyManager);
         Task task1 = new Task("name1", "description1", TaskStatus.NEW, TaskType.TASK);
         Task task2 = new Task("name2", "description2", TaskStatus.NEW, TaskType.TASK);
         Task expected1 = taskManager.addTask(task1);
@@ -86,7 +88,7 @@ class InMemoryTaskMangerTest {
 
     @Test
     void whenGetEpicByIdAndType() {
-        TaskManager taskManager = new InMemoryTaskManger();
+        TaskManager taskManager = new InMemoryTaskManger(historyManager);
         EpicTask task1 = new EpicTask("name1", "description1", TaskStatus.NEW, TaskType.EPIC_TASK);
         EpicTask task2 = new EpicTask("name2", "description2", TaskStatus.NEW, TaskType.EPIC_TASK);
         Task expected1 = taskManager.addTask(task1);
@@ -99,7 +101,7 @@ class InMemoryTaskMangerTest {
 
     @Test
     void whenDeleteTaskByIdAndType() {
-        TaskManager taskManager = new InMemoryTaskManger();
+        TaskManager taskManager = new InMemoryTaskManger(historyManager);
         Task task1 = new Task("name1", "description1", TaskStatus.NEW, TaskType.TASK);
         Task task2 = new Task("name2", "description2", TaskStatus.NEW, TaskType.TASK);
         Task saved1 = taskManager.addTask(task1);
@@ -112,7 +114,7 @@ class InMemoryTaskMangerTest {
 
     @Test
     void whenDeleteEpicByIdAndType() {
-        TaskManager taskManager = new InMemoryTaskManger();
+        TaskManager taskManager = new InMemoryTaskManger(historyManager);
         EpicTask task1 = new EpicTask("name1", "description1", TaskStatus.NEW, TaskType.EPIC_TASK);
         EpicTask task2 = new EpicTask("name2", "description2", TaskStatus.NEW, TaskType.EPIC_TASK);
         Task saved1 = taskManager.addTask(task1);
@@ -125,7 +127,7 @@ class InMemoryTaskMangerTest {
 
     @Test
     void whenUpdateTask() {
-        TaskManager taskManager = new InMemoryTaskManger();
+        TaskManager taskManager = new InMemoryTaskManger(historyManager);
         Task task1 = new Task("name1", "description1", TaskStatus.NEW, TaskType.TASK);
         Task oldTask = taskManager.addTask(task1);
         Task update = new Task(oldTask.getId(), "name2", "description2", TaskStatus.NEW, TaskType.TASK);
@@ -136,7 +138,7 @@ class InMemoryTaskMangerTest {
 
     @Test
     void whenUpdateEpic() {
-        TaskManager taskManager = new InMemoryTaskManger();
+        TaskManager taskManager = new InMemoryTaskManger(historyManager);
         EpicTask task1 = new EpicTask("name1", "description1", TaskStatus.NEW, TaskType.EPIC_TASK);
         Task oldTask = taskManager.addTask(task1);
         EpicTask update = new EpicTask(
