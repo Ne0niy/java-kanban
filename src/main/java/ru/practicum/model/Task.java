@@ -16,6 +16,11 @@ public class Task {
 
     protected TaskType taskType;
 
+    public Task(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Task(int id, String name, String description, TaskStatus taskStatus, TaskType taskType) {
         this.id = id;
         this.name = name;
