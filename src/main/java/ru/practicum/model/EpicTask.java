@@ -32,12 +32,14 @@ public class EpicTask extends Task {
         subTasksIds.clear();
     }
 
-    public void removeSubtaskIdIfExist(Integer id) {
+    public boolean removeSubtaskIdIfExist(Integer id) {
         for (int i = 0; i < subTasksIds.size(); i++) {
             if (subTasksIds.get(i).equals(id)) {
                 subTasksIds.remove(i);
+                return true;
             }
         }
+        return false;
     }
 
     @Override
