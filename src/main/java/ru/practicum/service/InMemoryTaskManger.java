@@ -6,9 +6,7 @@ import ru.practicum.model.Task;
 import ru.practicum.model.enums.TaskStatus;
 import ru.practicum.model.enums.TaskType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class InMemoryTaskManger implements TaskManager {
@@ -192,14 +190,19 @@ public class InMemoryTaskManger implements TaskManager {
     }
 
     private void deleteAllEpicTasks() {
-        subTasks.keySet().forEach(subTaskId -> {
+        Iterator<Integer> subTasksIterator = subTasks.keySet().iterator();
+        while (subTasksIterator.hasNext()) {
+            Integer subTaskId = subTasksIterator.next();
             historyManager.remove(subTaskId);
-            subTasks.remove(subTaskId);
-        });
-        epicTasks.keySet().forEach(epicTaskId -> {
+            subTasksIterator.remove();
+        }
+
+        Iterator<Integer> epicTasksIterator = epicTasks.keySet().iterator();
+        while (epicTasksIterator.hasNext()) {
+            Integer epicTaskId = epicTasksIterator.next();
             historyManager.remove(epicTaskId);
-            epicTasks.remove(epicTaskId);
-        });
+            epicTasksIterator.remove();
+        }
     }
 
     private SubTask addSubTask(SubTask subTask) {
