@@ -293,15 +293,15 @@ public class InMemoryTaskManger implements TaskManager {
         return TaskStatus.IN_PROGRESS;
     }
 
-    public HashMap<Integer, Task> getTasks() {
+    public Map<Integer, Task> getTasks() {
         return tasks;
     }
 
-    public HashMap<Integer, SubTask> getSubTasks() {
+    public Map<Integer, SubTask> getSubTasks() {
         return subTasks;
     }
 
-    public HashMap<Integer, EpicTask> getEpicTasks() {
+    public Map<Integer, EpicTask> getEpicTasks() {
         return epicTasks;
     }
 

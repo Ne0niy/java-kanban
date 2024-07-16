@@ -36,6 +36,10 @@ public class Task {
         this.taskType = taskType;
     }
 
+    public String toCSV() {
+        return id + "," + taskType + "," + name + "," + taskStatus + "," + description;
+    }
+
     public TaskType getTaskType() {
         return taskType;
     }

@@ -43,7 +43,6 @@ public class Main {
         System.out.println("__________________________________________________________");
         taskManager1.addTask(new Task("Уборка", "Протереть стол", TaskStatus.NEW, TaskType.TASK));
         System.out.println(taskManager1.getAllTasksByType(TaskType.TASK));
-
     }
 
 }
