@@ -21,39 +21,17 @@ import java.util.Map;
 
 public class FileBackedTaskManager extends InMemoryTaskManger {
 
-    private static File file;
+    private File file;
 
     public FileBackedTaskManager(HistoryManager historyManager, String path) {
         super(historyManager);
         file = new File(path);
     }
 
-    private void save() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write("id,type,name,status,description,epic");
-            writer.newLine();
-            for (Map.Entry<Integer, Task> pair : getTasks().entrySet()) {
-                writer.write(taskToString(pair.getValue()));
-                writer.newLine();
-            }
-            for (Map.Entry<Integer, SubTask> pair : getSubTasks().entrySet()) {
-                writer.write(taskToString(pair.getValue()));
-                writer.newLine();
-            }
-            for (Map.Entry<Integer, EpicTask> pair : getEpicTasks().entrySet()) {
-                writer.write(taskToString(pair.getValue()));
-                writer.newLine();
-            }
-            writer.newLine();
-        } catch (IOException e) {
-            throw new ManagerSaveException("Не удалось сохранить данные");
-        }
-    }
-
     public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager fromFile = new FileBackedTaskManager(Managers.getDefaultHistory(), file.getPath());
         StringBuilder stringFile = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new FileReader(FileBackedTaskManager.getFile()))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFile.getFile()))) {
             while (reader.ready()) {
                 stringFile.append(reader.readLine());
                 stringFile.append(System.lineSeparator());
@@ -74,52 +52,16 @@ public class FileBackedTaskManager extends InMemoryTaskManger {
             }
             fromFile.setNextId(tasks.size() + 1);
 
-            fromFile.getEpicTasks().values().forEach(epicTask -> {
-                int epicId = epicTask.getId();
-                fromFile.getSubTasks().values().forEach(subTask -> {
-                    if (subTask.getEpicId() == epicId) {
-                        epicTask.addSubTaskId(subTask.getId());
-                    }
-                });
+            fromFile.getSubTasks().values().forEach(subTask -> {
+                int epicId = subTask.getEpicId();
+                EpicTask epicTask = fromFile.getEpicTasks().get(epicId);
+                epicTask.addSubTaskId(subTask.getId());
             });
+
         } catch (IOException e) {
             throw new ManagerLoadException("Не удалось загрузить данные");
         }
         return fromFile;
-    }
-
-    private String taskToString(Task task) {
-        if (task instanceof SubTask) {
-            return task.getId() + "," + task.getTaskType() + "," + task.getName() + "," + task.getTaskStatus() + ","
-                    + task.getDescription() + "," + ((SubTask) task).getEpicId();
-        } else {
-            return task.getId() + "," + task.getTaskType() + "," + task.getName() + "," + task.getTaskStatus() + ","
-                    + task.getDescription();
-        }
-    }
-
-    private Task fromString(String str) {
-        String[] element = str.split(",");
-        int id = Integer.parseInt(element[0]);
-        TaskType taskType = TaskType.valueOf(element[1]);
-        String name = element[2];
-        TaskStatus taskStatus = TaskStatus.valueOf(element[3]);
-        String desc = element[4];
-        switch (taskType) {
-            case TASK -> {
-                return new Task(id, name, desc, taskStatus, taskType);
-            }
-            case SUBTASK -> {
-                int epicId = Integer.parseInt(element[5]);
-                return new SubTask(id, name, desc, taskStatus, epicId, taskType);
-            }
-            case EPIC_TASK -> {
-                return new EpicTask(id, name, desc, taskStatus, taskType);
-            }
-            default -> {
-                return null;
-            }
-        }
     }
 
     @Override
@@ -153,7 +95,63 @@ public class FileBackedTaskManager extends InMemoryTaskManger {
         save();
     }
 
-    private static File getFile() {
+    private File getFile() {
         return file;
+    }
+
+    private void save() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write("id,type,name,status,description,epic");
+            writer.newLine();
+
+            for (Task task : getTasks().values()) {
+                writer.write(taskToString(task));
+                writer.newLine();
+            }
+            for (SubTask subTask : getSubTasks().values()) {
+                writer.write(taskToString(subTask));
+                writer.newLine();
+            }
+            for (EpicTask epicTask : getEpicTasks().values()) {
+                writer.write(taskToString(epicTask));
+                writer.newLine();
+            }
+            writer.newLine();
+        } catch (IOException e) {
+            throw new ManagerSaveException("Не удалось сохранить данные");
+        }
+    }
+
+    private String taskToString(Task task) {
+        return task.toCSV();
+    }
+
+    private Task fromString(String str) {
+        try {
+            String[] element = str.split(",");
+            int id = Integer.parseInt(element[0]);
+            TaskType taskType = TaskType.valueOf(element[1]);
+            String name = element[2];
+            TaskStatus taskStatus = TaskStatus.valueOf(element[3]);
+            String desc = element[4];
+            switch (taskType) {
+                case TASK -> {
+                    return new Task(id, name, desc, taskStatus, taskType);
+                }
+                case SUBTASK -> {
+                    int epicId = Integer.parseInt(element[5]);
+                    return new SubTask(id, name, desc, taskStatus, epicId, taskType);
+                }
+                case EPIC_TASK -> {
+                    return new EpicTask(id, name, desc, taskStatus, taskType);
+                }
+                default -> {
+                    return null;
+                }
+            }
+        } catch (IllegalArgumentException exception) {
+            exception.printStackTrace();
+        }
+        return null;
     }
 }
