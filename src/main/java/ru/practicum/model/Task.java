@@ -3,6 +3,8 @@ package ru.practicum.model;
 import ru.practicum.model.enums.TaskStatus;
 import ru.practicum.model.enums.TaskType;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -16,28 +18,43 @@ public class Task {
 
     protected TaskType taskType;
 
+    protected Duration duration;
+
+    protected LocalDateTime startTime;
+
     public Task(int id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Task(int id, String name, String description, TaskStatus taskStatus, TaskType taskType) {
+    public Task(int id, String name, String description, TaskStatus taskStatus, TaskType taskType, Duration duration, LocalDateTime startTime) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.taskStatus = taskStatus;
         this.taskType = taskType;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
-    public Task(String name, String description, TaskStatus taskStatus, TaskType taskType) {
+    public Task(String name, String description, TaskStatus taskStatus, TaskType taskType, Duration duration, LocalDateTime startTime) {
         this.name = name;
         this.description = description;
         this.taskStatus = taskStatus;
         this.taskType = taskType;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public TaskType getTaskType() {
         return taskType;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime == null || duration == null) {
+            return null;
+        }
+        return startTime.plusMinutes(duration.toMinutes());
     }
 
     public void setTaskType(TaskType taskType) {
@@ -76,6 +93,22 @@ public class Task {
         this.taskStatus = taskStatus;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -97,6 +130,8 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", taskStatus=" + taskStatus +
                 ", taskType=" + taskType +
+                ", duration=" + duration +
+                ", startTime=" + startTime +
                 '}';
     }
 }
