@@ -6,8 +6,6 @@ import ru.practicum.model.Task;
 import ru.practicum.model.enums.TaskStatus;
 import ru.practicum.model.enums.TaskType;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -182,11 +180,7 @@ public class InMemoryTaskManger implements TaskManager {
                 subTasks.remove(subTaskId);
             });
             epic.clearSubTasks();
-            int id = epic.getId();
-            updateEpicTaskStatus(id);
-            updateEpicStartTime(id);
-            updateEpicEndTime(id);
-            updateEpicDuration(id);
+            updateEpicTaskStatus(epic.getId());
         }
     }
 
@@ -219,9 +213,6 @@ public class InMemoryTaskManger implements TaskManager {
             epicTask.addSubTaskId(subTask.getId());
             subTasks.put(subTask.getId(), subTask);
             updateEpicTaskStatus(epicId);
-            updateEpicStartTime(epicId);
-            updateEpicEndTime(epicId);
-            updateEpicDuration(epicId);
             return subTask;
         }
         System.out.println("Указан некоректный эпик-айди");
@@ -232,11 +223,7 @@ public class InMemoryTaskManger implements TaskManager {
     private EpicTask addEpicTask(EpicTask epicTask) {
         epicTask.setId(idCounter());
         epicTasks.put(epicTask.getId(), epicTask);
-        int id = epicTask.getId();
-        updateEpicTaskStatus(id);
-        updateEpicStartTime(id);
-        updateEpicEndTime(id);
-        updateEpicDuration(id);
+        updateEpicTaskStatus(epicTask.getId());
         return epicTask;
     }
 
@@ -244,20 +231,14 @@ public class InMemoryTaskManger implements TaskManager {
     private void updateSubTask(SubTask subTask) {
         int id = subTask.getId();
         subTasks.computeIfPresent(id, (key, value) -> subTask);
-        updateEpicTaskStatus(id);
-        updateEpicStartTime(id);
-        updateEpicEndTime(id);
-        updateEpicDuration(id);
+        updateEpicTaskStatus(subTask.getEpicId());
     }
 
 
     private void updateEpicTask(EpicTask epicTask) {
         int id = epicTask.getId();
         epicTasks.computeIfPresent(id, (key, value) -> epicTask);
-        updateEpicTaskStatus(id);
-        updateEpicStartTime(id);
-        updateEpicEndTime(id);
-        updateEpicDuration(id);
+        updateEpicTaskStatus(epicTask.getId());
     }
 
 
@@ -265,11 +246,7 @@ public class InMemoryTaskManger implements TaskManager {
         if (subTasks.containsKey(id)) {
             SubTask remove = subTasks.remove(id);
             removeSubTaskInEpicTask(id);
-            int epicId = remove.getEpicId();
-            updateEpicTaskStatus(epicId);
-            updateEpicStartTime(epicId);
-            updateEpicEndTime(epicId);
-            updateEpicDuration(epicId);
+            updateEpicTaskStatus(remove.getEpicId());
         }
     }
 
@@ -330,44 +307,6 @@ public class InMemoryTaskManger implements TaskManager {
 
     public void setNextId(int nextId) {
         this.idCounter = nextId;
-    }
-
-    private void updateEpicStartTime(int epicId) {
-        EpicTask epicTask = epicTasks.get(epicId);
-        List<Integer> subTasksIds = epicTask.getSubTasksIds();
-        epicTask.setStartTime(calculateEpicStartTime(subTasksIds));
-    }
-
-    private LocalDateTime calculateEpicStartTime(List<Integer> subTasksIds) {
-        return subTasksIds.stream()
-                .map(id -> subTasks.get(id).getStartTime())
-                .min(Comparator.naturalOrder()).get();
-    }
-
-    private void updateEpicEndTime(int epicId) {
-        EpicTask epicTask = epicTasks.get(epicId);
-        List<Integer> subTasksIds = epicTask.getSubTasksIds();
-        epicTask.setStartTime(calculateEpicEndTime(subTasksIds));
-    }
-
-    private LocalDateTime calculateEpicEndTime(List<Integer> subTasksIds) {
-        return subTasksIds.stream()
-                .map(id -> subTasks.get(id).getStartTime())
-                .max(Comparator.naturalOrder()).get();
-    }
-
-    private void updateEpicDuration(int epicId) {
-        EpicTask epicTask = epicTasks.get(epicId);
-        List<Integer> subTasksIds = epicTask.getSubTasksIds();
-        epicTask.setDuration(calculateEpicDuration(subTasksIds));
-    }
-
-    private Duration calculateEpicDuration(List<Integer> subTasksIds) {
-        Duration epicDuration = Duration.ZERO;
-        subTasksIds.stream()
-                .map(id -> subTasks.get(id).getDuration())
-                .forEach(epicDuration::plus);
-        return epicDuration;
     }
 }
 
