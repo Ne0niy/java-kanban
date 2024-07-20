@@ -292,6 +292,22 @@ public class InMemoryTaskManger implements TaskManager {
         }
         return TaskStatus.IN_PROGRESS;
     }
+
+    public Map<Integer, Task> getTasks() {
+        return tasks;
+    }
+
+    public Map<Integer, SubTask> getSubTasks() {
+        return subTasks;
+    }
+
+    public Map<Integer, EpicTask> getEpicTasks() {
+        return epicTasks;
+    }
+
+    public void setNextId(int nextId) {
+        this.idCounter = nextId;
+    }
 }
 
 

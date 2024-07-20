@@ -19,6 +19,11 @@ public class SubTask extends Task {
         this.epicId = epicId;
     }
 
+    @Override
+    public String toCSV() {
+        return id + "," + taskType + "," + name + "," + taskStatus + "," + description + "," + epicId;
+    }
+
     public int getEpicId() {
         return epicId;
     }

@@ -1,14 +1,11 @@
 package ru.practicum.util;
 
-import ru.practicum.service.HistoryManager;
-import ru.practicum.service.InMemoryHistoryManager;
-import ru.practicum.service.InMemoryTaskManger;
-import ru.practicum.service.TaskManager;
+import ru.practicum.service.*;
 
 public class Managers {
 
-    public static TaskManager getDefault(HistoryManager historyManager) {
-        return new InMemoryTaskManger(historyManager);
+    public static TaskManager getDefault(HistoryManager historyManager, String path) {
+        return new FileBackedTaskManager(historyManager, path);
     }
 
     public static HistoryManager getDefaultHistory() {
