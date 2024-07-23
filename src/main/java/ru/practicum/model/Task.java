@@ -7,7 +7,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Task {
+public class Task implements Comparable<Task> {
     protected int id;
 
     protected String name;
@@ -46,8 +46,24 @@ public class Task {
         this.startTime = startTime;
     }
 
+    public Task(int id, String name, String description, TaskStatus taskStatus, TaskType taskType) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.taskStatus = taskStatus;
+        this.taskType = taskType;
+    }
+
+    public Task(String name, String description, TaskStatus taskStatus, TaskType taskType) {
+        this.name = name;
+        this.description = description;
+        this.taskStatus = taskStatus;
+        this.taskType = taskType;
+    }
+
     public String toCSV() {
-        return id + "," + taskType + "," + name + "," + taskStatus + "," + description;
+        return id + "," + taskType + "," + name + "," + taskStatus + "," + description + ","
+                + duration.toMinutes() + "," + startTime;
     }
 
     public TaskType getTaskType() {
@@ -134,8 +150,13 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", taskStatus=" + taskStatus +
                 ", taskType=" + taskType +
-                ", duration=" + duration +
+                ", duration=" + duration.toMinutes() +
                 ", startTime=" + startTime +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Task o) {
+        return this.getStartTime().compareTo(o.getStartTime());
     }
 }

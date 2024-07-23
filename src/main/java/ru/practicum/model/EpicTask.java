@@ -3,6 +3,7 @@ package ru.practicum.model;
 import ru.practicum.model.enums.TaskStatus;
 import ru.practicum.model.enums.TaskType;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,16 @@ public class EpicTask extends Task {
 
     private LocalDateTime endTime;
 
+
+    public EpicTask(int id, String name, String description, TaskStatus taskStatus, TaskType taskType,
+                    Duration duration, LocalDateTime startTime) {
+        super(id, name, description, taskStatus, taskType, duration, startTime);
+    }
+
+    public EpicTask(String name, String description, TaskStatus taskStatus, TaskType taskType,
+                    Duration duration, LocalDateTime startTime) {
+        super(name, description, taskStatus, taskType, duration, startTime);
+    }
 
     public EpicTask(int id, String name, String description, TaskStatus taskStatus, TaskType taskType) {
         super(id, name, description, taskStatus, taskType);
@@ -58,11 +69,14 @@ public class EpicTask extends Task {
     public String toString() {
         return "EpicTask{" +
                 "subTasksIds=" + subTasksIds +
+                ", endTime=" + endTime +
                 ", id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", taskStatus=" + taskStatus +
                 ", taskType=" + taskType +
+                ", duration=" + duration.toMinutes() +
+                ", startTime=" + startTime +
                 '}';
     }
 }

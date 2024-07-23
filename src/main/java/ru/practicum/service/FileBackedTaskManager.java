@@ -15,6 +15,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +58,12 @@ public class FileBackedTaskManager extends InMemoryTaskManger {
                 int epicId = subTask.getEpicId();
                 EpicTask epicTask = fromFile.getEpicTasks().get(epicId);
                 epicTask.addSubTaskId(subTask.getId());
+            });
+
+            fromFile.getEpicTasks().values().forEach(epicTask -> {
+                fromFile.updateEpicStartTime(epicTask.getId());
+                fromFile.updateEpicDuration(epicTask.getId());
+                fromFile.updateEpicEndTime(epicTask.getId());
             });
 
         } catch (IOException e) {
@@ -134,16 +142,18 @@ public class FileBackedTaskManager extends InMemoryTaskManger {
             String name = element[2];
             TaskStatus taskStatus = TaskStatus.valueOf(element[3]);
             String desc = element[4];
+            Duration duration = Duration.ofMinutes(Long.parseLong(element[5]));
+            LocalDateTime startTime = LocalDateTime.parse(element[6]);
             switch (taskType) {
                 case TASK -> {
-                    return new Task(id, name, desc, taskStatus, taskType);
+                    return new Task(id, name, desc, taskStatus, taskType, duration, startTime);
                 }
                 case SUBTASK -> {
-                    int epicId = Integer.parseInt(element[5]);
-                    return new SubTask(id, name, desc, taskStatus, epicId, taskType);
+                    int epicId = Integer.parseInt(element[7]);
+                    return new SubTask(id, name, desc, taskStatus, epicId, taskType, duration, startTime);
                 }
                 case EPIC_TASK -> {
-                    return new EpicTask(id, name, desc, taskStatus, taskType);
+                    return new EpicTask(id, name, desc, taskStatus, taskType, duration, startTime);
                 }
                 default -> {
                     return null;

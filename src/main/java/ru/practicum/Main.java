@@ -11,6 +11,8 @@ import ru.practicum.service.TaskManager;
 import ru.practicum.util.Managers;
 
 import java.io.File;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class Main {
 
@@ -19,15 +21,17 @@ public class Main {
 
         TaskManager taskManager = new FileBackedTaskManager(Managers.getDefaultHistory(), "./resource/file.csv");
 
-        taskManager.addTask(new Task("Уборка", "Протереть стол", TaskStatus.NEW, TaskType.TASK));
-        taskManager.addTask(new Task("Закалка", "Удариться мизинцем об тумбу", TaskStatus.NEW, TaskType.TASK));
+        taskManager.addTask(new Task("Уборка", "Протереть стол", TaskStatus.NEW, TaskType.TASK, Duration.ofMinutes(60), LocalDateTime.now().plusHours(1)));
+        taskManager.addTask(new Task("Закалка", "Удариться мизинцем об тумбу", TaskStatus.NEW, TaskType.TASK, Duration.ofMinutes(60), LocalDateTime.now().plusHours(2)));
 
-        EpicTask epic1 = (EpicTask) taskManager.addTask(new EpicTask("Эпик_1", "Сделать кофе", TaskStatus.NEW, TaskType.EPIC_TASK));
+        System.out.println(taskManager.getPrioritizedTasks());
+
+       /* EpicTask epic1 = (EpicTask) taskManager.addTask(new EpicTask("Эпик_1", "Сделать кофе", TaskStatus.NEW, TaskType.EPIC_TASK));
         EpicTask epic2 = (EpicTask) taskManager.addTask(new EpicTask("Эпик_2", "Выпить кофе", TaskStatus.NEW, TaskType.EPIC_TASK));
 
-        taskManager.addTask(new SubTask("Включить чайник", "Налить кофе", TaskStatus.NEW, epic1.getId(), TaskType.SUBTASK));
-        taskManager.addTask(new SubTask("Взять молоко", "Налить молоко", TaskStatus.NEW, epic1.getId(), TaskType.SUBTASK));
-        taskManager.addTask(new SubTask("Взять чашку", "Выпить кофе", TaskStatus.NEW, epic2.getId(), TaskType.SUBTASK));
+        taskManager.addTask(new SubTask("Включить чайник", "Налить кофе", TaskStatus.NEW, epic1.getId(), TaskType.SUBTASK, Duration.ofMinutes(60), LocalDateTime.now().plusHours(2)));
+        taskManager.addTask(new SubTask("Взять молоко", "Налить молоко", TaskStatus.NEW, epic1.getId(), TaskType.SUBTASK, Duration.ofMinutes(60), LocalDateTime.now().plusDays(15)));
+        taskManager.addTask(new SubTask("Взять чашку", "Выпить кофе", TaskStatus.NEW, epic2.getId(), TaskType.SUBTASK, Duration.ofMinutes(60), LocalDateTime.now().plusHours(2)));
 
         System.out.println("_________________________________________________________");
         System.out.println(taskManager.getAllTasksByType(TaskType.TASK));
@@ -41,8 +45,8 @@ public class Main {
         System.out.println(taskManager1.getAllTasksByType(TaskType.SUBTASK));
 
         System.out.println("__________________________________________________________");
-        taskManager1.addTask(new Task("Уборка", "Протереть стол", TaskStatus.NEW, TaskType.TASK));
-        System.out.println(taskManager1.getAllTasksByType(TaskType.TASK));
+        taskManager1.addTask(new Task("Уборка", "Протереть стол", TaskStatus.NEW, TaskType.TASK, Duration.ofMinutes(15), LocalDateTime.now()));
+        System.out.println(taskManager1.getAllTasksByType(TaskType.TASK));*/
     }
 
 }
