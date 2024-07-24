@@ -195,7 +195,7 @@ public class InMemoryTaskManger implements TaskManager {
         LocalDateTime endTime = task.getEndTime();
         return prioritizedTasks.stream()
                 .filter(prioritizedTask -> prioritizedTask.getStartTime() != null)
-                .noneMatch(prioritizedTask -> !endTime.isBefore(prioritizedTask.getStartTime())
+                .anyMatch(prioritizedTask -> !endTime.isBefore(prioritizedTask.getStartTime())
                         && !prioritizedTask.getEndTime().isBefore(startTime));
     }
 
@@ -399,16 +399,13 @@ public class InMemoryTaskManger implements TaskManager {
     }
 
     private Duration calculateEpicDuration(List<Integer> subTasksIds) {
-        Duration epicDuration = Duration.ZERO;
-        for (int subTasksId : subTasksIds) {
-            Duration subTaskDuration = subTasks.get(subTasksId).getDuration();
-            epicDuration = epicDuration.plus(subTaskDuration);
-        }
-        return epicDuration;
+        return subTasksIds.stream()
+                .map(subTasks::get)
+                .map(Task::getDuration)
+                .reduce(Duration.ZERO, Duration::plus);
     }
 
     private void addTaskByPriority(Task task) {
-
         if (task.getStartTime() != null && !isTaskOverlap(task)) {
             prioritizedTasks.add(task);
         }

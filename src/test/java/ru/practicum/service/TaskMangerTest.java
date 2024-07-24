@@ -147,4 +147,54 @@ abstract class TaskMangerTest<T extends TaskManager> {
         Task updateTask = taskManager.getTaskByIdAndType(oldTask.getId(), TaskType.EPIC_TASK);
         assertEquals(update, updateTask);
     }
+
+    @Test
+    void whenSubTaskStatusIsNewThenEpicStatusIsNew() {
+        Task task = taskManager.addTask(new EpicTask("name1", "description1", TaskStatus.IN_PROGRESS, TaskType.EPIC_TASK));
+        taskManager.addTask(new SubTask("name1", "description1", TaskStatus.NEW, task.getId(), TaskType.SUBTASK, Duration.ofMinutes(15), LocalDateTime.now()));
+        taskManager.addTask(new SubTask("name2", "description2", TaskStatus.NEW, task.getId(), TaskType.SUBTASK, Duration.ofMinutes(15), LocalDateTime.now()));
+        assertEquals(TaskStatus.NEW, taskManager.getTaskByIdAndType(task.getId(), TaskType.EPIC_TASK).getTaskStatus());
+    }
+
+    @Test
+    void whenSubTaskStatusIsDoneThenEpicStatusIsDone() {
+        Task task = taskManager.addTask(new EpicTask("name1", "description1", TaskStatus.NEW, TaskType.EPIC_TASK));
+        taskManager.addTask(new SubTask("name1", "description1", TaskStatus.DONE, task.getId(), TaskType.SUBTASK, Duration.ofMinutes(15), LocalDateTime.now()));
+        taskManager.addTask(new SubTask("name2", "description2", TaskStatus.DONE, task.getId(), TaskType.SUBTASK, Duration.ofMinutes(15), LocalDateTime.now()));
+        assertEquals(TaskStatus.DONE, taskManager.getTaskByIdAndType(task.getId(), TaskType.EPIC_TASK).getTaskStatus());
+    }
+
+    @Test
+    void whenSubTaskStatusIsDoneAndNewThenEpicStatusIsInProgress() {
+        Task task = taskManager.addTask(new EpicTask("name1", "description1", TaskStatus.NEW, TaskType.EPIC_TASK));
+        taskManager.addTask(new SubTask("name1", "description1", TaskStatus.DONE, task.getId(), TaskType.SUBTASK, Duration.ofMinutes(15), LocalDateTime.now()));
+        taskManager.addTask(new SubTask("name2", "description2", TaskStatus.NEW, task.getId(), TaskType.SUBTASK, Duration.ofMinutes(15), LocalDateTime.now()));
+        assertEquals(TaskStatus.IN_PROGRESS, taskManager.getTaskByIdAndType(task.getId(), TaskType.EPIC_TASK).getTaskStatus());
+    }
+
+    @Test
+    void whenSubTaskStatusIsInProgressThenEpicStatusIsInProgress() {
+        Task task = taskManager.addTask(new EpicTask("name1", "description1", TaskStatus.NEW, TaskType.EPIC_TASK));
+        taskManager.addTask(new SubTask("name1", "description1", TaskStatus.IN_PROGRESS, task.getId(), TaskType.SUBTASK, Duration.ofMinutes(15), LocalDateTime.now()));
+        taskManager.addTask(new SubTask("name2", "description2", TaskStatus.IN_PROGRESS, task.getId(), TaskType.SUBTASK, Duration.ofMinutes(15), LocalDateTime.now()));
+        assertEquals(TaskStatus.IN_PROGRESS, taskManager.getTaskByIdAndType(task.getId(), TaskType.EPIC_TASK).getTaskStatus());
+    }
+
+    @Test
+    void whenAddSubTaskToEpicTask() {
+        Task epicTask = taskManager.addTask(new EpicTask("name1", "description1", TaskStatus.NEW, TaskType.EPIC_TASK));
+        SubTask subTask = (SubTask) taskManager.addTask(new SubTask("name1", "description1", TaskStatus.IN_PROGRESS, epicTask.getId(), TaskType.SUBTASK, Duration.ofMinutes(15), LocalDateTime.now()));
+        assertEquals(epicTask.getId(), subTask.getEpicId());
+    }
+
+    @Test
+    void whenAddTaskIsOverLap() {
+        LocalDateTime startTime = LocalDateTime.now();
+        taskManager.addTask(new Task("name1", "description1", TaskStatus.NEW, TaskType.TASK, Duration.ofMinutes(15), startTime));
+        taskManager.addTask(new Task("name2", "description2", TaskStatus.NEW, TaskType.TASK, Duration.ofMinutes(100), startTime.minusMinutes(90)));
+        taskManager.addTask(new Task("name3", "description3", TaskStatus.NEW, TaskType.TASK, Duration.ofMinutes(100), startTime.plusMinutes(200)));
+        assertEquals(taskManager.getPrioritizedTasks().size(), 2);
+    }
+
+
 }

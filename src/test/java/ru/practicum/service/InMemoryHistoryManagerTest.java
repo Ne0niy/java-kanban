@@ -9,6 +9,14 @@ import static org.junit.jupiter.api.Assertions.*;
 public class InMemoryHistoryManagerTest {
 
     @Test
+    void whenEmptyHistory() {
+        HistoryManager historyManager = new InMemoryHistoryManager();
+        assertEquals(historyManager.getHistory().size(), 0);
+        }
+
+
+
+    @Test
     void whenAddTask() {
         Task task = new Task(1, "Задача-1");
         HistoryManager historyManager = new InMemoryHistoryManager();
