@@ -4,9 +4,16 @@ import org.junit.jupiter.api.Test;
 import ru.practicum.model.Task;
 
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InMemoryHistoryManagerTest {
+
+    @Test
+    void whenEmptyHistory() {
+        HistoryManager historyManager = new InMemoryHistoryManager();
+        assertTrue(historyManager.getHistory().isEmpty());
+    }
 
     @Test
     void whenAddTask() {
@@ -57,6 +64,4 @@ public class InMemoryHistoryManagerTest {
         assertEquals(task1, history.get(0));
         assertEquals(task3, history.get(1));
     }
-
-
 }

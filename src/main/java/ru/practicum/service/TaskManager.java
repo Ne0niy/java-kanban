@@ -10,6 +10,8 @@ public interface TaskManager {
 
      List<Task> getAllTasksByType(TaskType taskType);
 
+     List<Task> getPrioritizedTasks();
+
      void deleteAllTasksByType(TaskType taskType);
 
      Task getTaskByIdAndType(int id, TaskType taskType);
@@ -26,5 +28,5 @@ public interface TaskManager {
 
      List<Task> getHistory();
 
-
+     boolean isTaskOverlap(Task task);
 }
