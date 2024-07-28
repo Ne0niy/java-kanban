@@ -28,8 +28,10 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        history.removeNode(historyTaskMap.get(id));
-        historyTaskMap.remove(id);
+        Node<Task> remove = historyTaskMap.remove(id);
+        if (remove != null) {
+            history.removeNode(remove);
+        }
     }
     @Override
     public int size() {
@@ -67,7 +69,6 @@ class CustomLinkedList<T> {
     }
 
     public void removeNode(Node<T> node) {
-
         if (node == head && node == tail) {
             head = null;
             tail = null;

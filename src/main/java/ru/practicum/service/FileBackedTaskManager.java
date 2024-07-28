@@ -98,8 +98,8 @@ public class FileBackedTaskManager extends InMemoryTaskManger {
     }
 
     @Override
-    public void removeSubTaskInEpicTask(int id) {
-        super.removeSubTaskInEpicTask(id);
+    public void removeSubTaskInEpicTask(SubTask subTask) {
+        super.removeSubTaskInEpicTask(subTask);
         save();
     }
 
