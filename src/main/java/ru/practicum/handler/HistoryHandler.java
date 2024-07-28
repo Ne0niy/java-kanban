@@ -44,5 +44,4 @@ public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
             sendNotFound(exchange);
         }
     }
-
 }

@@ -101,11 +101,11 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
 
     private void handlePostEpic(HttpExchange exchange) {
         try {
-            InputStreamReader inputReader = new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
+            InputStreamReader inputReader = new InputStreamReader(exchange.getRequestBody(),
+                    StandardCharsets.UTF_8);
             EpicTask epicTask = gson.fromJson(inputReader, EpicTask.class);
             taskManager.addTask(epicTask);
             sendText(exchange, "Задача добавлена", 201);
-
         } catch (Exception e) {
             e.printStackTrace();
             sendHasInteractions(exchange);
@@ -125,5 +125,4 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
             e.printStackTrace();
         }
     }
-
 }

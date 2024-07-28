@@ -22,7 +22,7 @@ public interface TaskManager {
 
      void deleteTaskByIdAndType(int id, TaskType taskType);
 
-     void removeSubTaskInEpicTask(int id);
+     void removeSubTaskInEpicTask(SubTask subTask);
 
      List<SubTask> getSubTasksByEpicId(int id);
 

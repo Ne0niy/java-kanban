@@ -38,5 +38,4 @@ public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
             sendNotFound(exchange);
         }
     }
-
 }

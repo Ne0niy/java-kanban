@@ -59,7 +59,6 @@ public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
             e.printStackTrace();
             sendNotFound(exchange);
         }
-
     }
 
     private void handleGetSubtaskById(HttpExchange exchange, String taskIdStr) {
@@ -100,5 +99,4 @@ public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
             sendNotFound(exchange);
         }
     }
-
 }

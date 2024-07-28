@@ -58,7 +58,6 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
             e.printStackTrace();
             sendNotFound(exchange);
         }
-
     }
 
     private void handleGetTaskById(HttpExchange exchange, String taskIdStr) {
